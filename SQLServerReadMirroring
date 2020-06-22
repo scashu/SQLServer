@@ -1,0 +1,13 @@
+
+
+Monitoring SQLServer Database Mirroring
+select state_desc from sys.database_mirroring_endpoints;
+
+Management Studio -> Connect Principal -> Database -> Tasks -> 
+    Launch DB Mirroring Monitor -> Action -> Registered Mirror DB -> Connect to the server dialog box ->
+Look at Database Monitoring History
+
+High Availabitlity/AlwaysOn ****  next evolution of mirroring technologies in SQLServer.  
+
+
+
