@@ -1,3 +1,39 @@
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+
+Monitoring SQLServer Database Mirroring
+-- SQL Server
+
+https://stackoverflow.com/questions/20375975/how-to-shrink-a-database-in-ms-sql-server-if-the-drive-is-full
+USE myDatabaseName;
+GO
+-- Truncate the log by changing the database recovery model to SIMPLE.
+ALTER DATABASE myDatabaseName
+SET RECOVERY SIMPLE;
+GO
+-- Shrink the truncated log file to 1 MB.
+DBCC SHRINKFILE (myDatabaseName_Log, 1);
+GO
+-- Reset the database recovery model.
+ALTER DATABASE myDatabaseName
+SET RECOVERY FULL;
+GO
+
+------------------------------------------------------------------------------------------------------------
+
+Run EXEC sp_who2 'active' and see if you can spot anything backup related
+#SQL Server 2012 onwards - You should switch the recovery model to Simple and revert to perform the same action.
+ALTER DATABASE DatabaseName SET RECOVERY SIMPLE;
+#After which, don't forget to re-instate your original recovery model!
+#Shrinking the log - Just because you've truncated the log this does not mean that the file size on disk has changed.
+#To reduce the file size of the log you need to issue the following command
+DBCC SHRINKFILE (DatabaseLogLogicalName, 1);
+
 # Determining databases in a SQL Server instance with high number of VLFs
 SELECT name AS 'Database Name', total_vlf_count AS 'VLF count' 
 FROM sys.databases AS s
