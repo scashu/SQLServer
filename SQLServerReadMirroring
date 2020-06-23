@@ -1,7 +1,40 @@
+# Determining databases in a SQL Server instance with high number of VLFs
+SELECT name AS 'Database Name', total_vlf_count AS 'VLF count' 
+FROM sys.databases AS s
+CROSS APPLY sys.dm_db_log_stats(s.database_id) 
+WHERE total_vlf_count  > 100;
 
+# Determining databases in a SQL Server instance with transaction log backups older than 4 hours
+SELECT name AS 'Database Name', log_backup_time AS 'last log backup time' 
+FROM sys.databases AS s
+CROSS APPLY sys.dm_db_log_stats(s.database_id); 
+
+# Determing databases in a SQL Server instance with high number of VLFs
+SELECT [name], COUNT(l.database_id) AS 'vlf_count' 
+FROM sys.databases s
+CROSS APPLY sys.dm_db_log_info(s.database_id) l
+GROUP BY [name]
+HAVING COUNT(l.database_id) > 100
+
+------------------------------------------------------------------------------------------------------------
+Determing the position of the last VLF in transaction log before shrinking the log file
+https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/sys-dm-db-log-info-transact-sql?view=sql-server-ver15
+------------------------------------------------------------------------------------------------------------
+
+**** Preventing the SQL Transaction Log file from being truncated:
+SELECT [name] AS Database_Name, log_reuse_wait_desc FROM sys.databases;
+** Expected to see NOTHING -> SQL Transaction log is truncated and reusable
+
+Monitoring SQL Server Transaction Log File
+sys.dm_db_log_space_usage is a dynamic management view
+SELECT (total_log_size_in_bytes - used_log_space_in_bytes)*1.0/1024/1024 AS [free log space in MB]  
+FROM sys.dm_db_log_space_usage;  
 
 Monitoring SQLServer Database Mirroring
 select state_desc from sys.database_mirroring_endpoints;
+
+----------------------------------------------------------------------------------------------------
+Monitoring SQLServer Database Mirroring
 
 Management Studio -> Connect Principal -> Database -> Tasks -> 
     Launch DB Mirroring Monitor -> Action -> Registered Mirror DB -> Connect to the server dialog box ->
@@ -10,4 +43,72 @@ Look at Database Monitoring History
 High Availabitlity/AlwaysOn ****  next evolution of mirroring technologies in SQLServer.  
 
 
+----------------------------------------------------------------------------------------------------
+https://www.sqlshack.com/sql-server-transaction-log-growth-monitoring-and-management/
+SQL Server Transaction Log Growth Monitoring and Management
+In the heavily transactional systems with excessive logging operations, 
+the SQL Server Transaction Log file will grow rapidly, until it reaches its maximum size, 
+generating error number 9002. And if the auto-growth option is enabled, 
+the underlying disk drive will run out of free space.
 
+-- SQL Server index rebuild operation is a fully logged operations that use the Transaction Log excessively, 
+especially when the recovery model of the database is FULL.
+
+SQL Transaction Log Backup
+When the recovery model of the database is FULL or Bulk-Logged, which is the default recovery model of all newly created databases, 
+unless you change the recovery model setting in the model system database, the inactive part of the SQL Server Transaction Log 
+file that is waiting for truncation will not be truncated automatically unless a Transaction Log backup is performed on that 
+database to explicitly truncate that part of the log. 
+**** It is a common mistake to configure only Full backup plan on the database with the Full recovery model, 
+as the Full backup process will not truncate the SQL transaction log file and make it available for reuse. In this case,
+the log file will grow continuously, without truncation, until it runs out of free space.
+
+If the mirrored server or secondary replica is not reachable, the SQL Transaction Log records in the primary site 
+that are not copied to the secondary site yet will remain part of the active log that cannot be truncated. 
+After a long time of disconnection, the number of SQL transaction logs pending the mirroring or the availability 
+replica will increase, leading the SQL Server Transaction Log file to run out of free space due to not being able 
+to reuse the log space.
+
+Troubleshoot Log Growth
+When the SQL Server Transaction Log file of the database runs out of free space, you need first to verify the 
+Transaction Log file size settings and check if it is possible to extend the log file size. 
+If you are not able to extend the log file size and the database recovery model is Full, you can force the 
+log truncation by changing it to Simple recovery model. If the database recovery model is already Simple or 
+changing it to Simple recovery model is not applicable, you need to identify what is preventing the SQL Server
+Transaction Log from being truncated.
+The sys.databases system catalog view can be used to retrieve useful information about the reason behind preventing 
+the SQL Transaction Log file from being truncated, under the log_reuse_wait_desc column, as in the query below:
+The log_reuse_wait_desc column value that indicates a healthy state for the database Transaction Log file is NOTHING, 
+which means that the SQL Transaction Log is truncated and reusable. 
+
+Monitoring SQL Server Transaction Log File
+It is always better to be a proactive database administrator and keep an eye on the SQL Server Transaction Log file growth, 
+in order to prevent catastrophic issues when having the log file running out of free space for a long time. 
+sys.dm_db_log_space_usage is a dynamic management view, introduced in SQL Server 2012, that is used to return space usage 
+information for the transaction log. 
+
+
+----------------------------------------------------------------------------------------------------
+https://docs.microsoft.com/en-us/sql/relational-databases/system-dynamic-management-views/database-related-dynamic-management-views-transact-sql?view=sql-server-ver15
+Database Related Dynamic Management Views
+
+
+----------------------------------------------------------------------------------------------------
+SQL Server internally manages the Log file into multiple smaller chunks called Virtual Log Files or VLFs. 
+A Virtual Log File is a smaller file inside Log file which contains the actual log records which are actively written inside them.
+
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+
+----------------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------
