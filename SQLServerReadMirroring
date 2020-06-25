@@ -4,7 +4,23 @@
 ------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
+You can use DBCC LOGINFO to check the number of VLF’s in your database.
+You can also use DBCC SQLPERF (‘logspace’) which has been around for a while.
+
+How to monitor transaction log growth
+
+SELECT name AS [File Name], 
+        physical_name AS [Physical Name], 
+        size/128.0 AS [Total Size in MB], 
+        size/128.0 - CAST(FILEPROPERTY(name, 'SpaceUsed') AS int)/128.0 AS [Available Space In MB], 
+        [growth], [file_id]
+        FROM sys.database_files
+        WHERE type_desc = 'LOG'
+
 ------------------------------------------------------------------------------------------------------------
+   https://www.mssqltips.com/sqlservertutorial/3311/how-to-shrink-the-transaction-log/     
+------------------------------------------------------------------------------------------------------------
+SELECT name FROM sys.master_files WHERE type_desc = 'LOG'
 
 Monitoring SQLServer Database Mirroring
 -- SQL Server
