@@ -1,11 +1,30 @@
 ------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
+**** You can use DBCC LOGINFO to check the number of VLF’s in your database.
+**** You can also use DBCC SQLPERF (‘logspace’) which has been around for a while. *************************
+------------------------------------------------------------------------------------------------------------
+https://www.sqlshack.com/sql-server-database-recovery-process-internals-database-startup-command/
+ The first and foremost important thing is that checking the status of each database
+select name, state_desc from sys.databases;
+select * from sys.databases;
+
+SELECT db_name(database_id),percent_complete,estimated_completion_time,
+ CASE
+WHEN estimated_completion_time < 36000000
+THEN '0'
+ELSE ''
+END
++ RTRIM(estimated_completion_time/1000/3600)
++ ':' + RIGHT('0' + RTRIM((estimated_completion_time/1000)%3600/60), 2)
++ ':' + RIGHT('0' + RTRIM((estimated_completion_time/1000)%60), 2) AS [Time Remaining],
+percent_complete,
+* FROM sys.dm_exec_requests
+
 ------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------
+
 ------------------------------------------------------------------------------------------------------------
-You can use DBCC LOGINFO to check the number of VLF’s in your database.
-You can also use DBCC SQLPERF (‘logspace’) which has been around for a while.
 
 How to monitor transaction log growth
 
