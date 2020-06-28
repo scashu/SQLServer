@@ -1,4 +1,15 @@
 
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
 
 -----------------------------------------------------------------------------------
 mysql
@@ -14,6 +25,39 @@ SHOW INDEX FROM tableName;
 
 
 -----------------------------------------------------------------------------------
+
+Replication with Global Transaction Identifiers
+https://dev.mysql.com/doc/refman/5.7/en/replication-gtids.html
+
+Semisynchronous Replication
+https://dev.mysql.com/doc/refman/5.7/en/replication-semisync.html
+
+
+----------------------------------------------------------------------
+https://dev.mysql.com/doc/refman/5.7/en/faqs-replication.html
+
+SHOW MASTER STATUS;
+SHOW SLAVE STATUS, Check the Seconds_Behind_Master column in the output from SHOW SLAVE STATUS.
+SHOW PROCESSLIST, the number of seconds displayed for the slave SQL thread is the number of seconds between the timestamp of the last replicated event and the real time of the slave machine. 
+
+FLUSH TABLES WITH READ LOCK;
+SELECT MASTER_POS_WAIT('log_name', log_pos);
+UNLOCK TABLES;
+
+mysql> SHOW VARIABLES LIKE 'binlog_format';   -- whether a master server is using statement-based or row-based binary logging format?
+
+----------------------------------------------------------------------
+
+High-availability solutions (with automatic failover) require active monitoring and either custom scripts or third party tools to provide the failover support from the original MySQL server to the slave.
+To handle the process manually, you should be able to switch from a failed master to a pre-configured slave by altering your application to talk to the new server or by adjusting the DNS for the MySQL server from the failed server to the new server.
+
+
+----------------------------------------------------------------------
+
+
+For a guide to setting up two or more servers for replication using binary log file positions, Section 16.1.2, “Setting Up Binary Log File Position Based Replication”, deals with the configuration of the servers and provides methods for copying data between the master and slaves.
+
+For a guide to setting up two or more servers for replication using GTID transactions, Section 16.1.3, “Replication with Global Transaction Identifiers”, deals with the configuration of the servers.
 
 
 
@@ -54,3 +98,61 @@ mysql> SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1;
 mysql> STOP SLAVE;
 mysql> START SLAVE;
 
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+https://dev.mysql.com/doc/refman/8.0/en/optimization.html
+Optimization
+
+
+mysql> EXPLAIN FORMAT=TREE
+    -> SELECT * FROM t1
+    ->     JOIN t2 ON (t1.c1 = t2.c1)
+    ->     JOIN t3 ON (t2.c1 < t3.c1)\G
+
+
+    
+-------------------------------------------------------------------------------------
+
+
+https://www.mysqltutorial.org/getting-started-with-mysql/connect-to-mysql-server/
+
+To connect to the MySQL Server, you use this command:
+shell>mysql -u root -p
+-u root means that you connect to the MySQL Server using the user account root.
+-p instructs mysql to prompt for a password.
+You type the password for the user account root and press Enter:
+Enter password: ********
+
+mysql> show databases;
+mysql> USE database_name;
+
+shell> mysql -u root -D classicmodels -p
+mysql> select database();
+
+mysql> system clear;
+
+Show all tables in a current database.
+SHOW TABLES;
+
+https://www.mysqltutorial.org/mysql-cheat-sheet.aspx
+
+Connect to MySQL Using MySQL Workbench
+
+
+
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------------
