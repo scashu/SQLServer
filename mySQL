@@ -1,1 +1,46 @@
 
+
+-----------------------------------------------------------------------------------
+
+
+-----------------------------------------------------------------------------------
+
+
+
+https://dev.mysql.com/doc/refman/5.7/en/replication-howto-masterbaseconfig.html
+
+
+https://www.gigenet.com/blog/basic-mysql-replication-setup-using-binary-log-file-position/
+
+-----------------------------------------------------------------------------------
+https://dev.mysql.com/doc/refman/5.7/en/replication-howto-masterstatus.html
+Record the Master binary log position for slave configuration
+Obtaining the Replication Master Binary Log Coordinates
+mysql> FLUSH TABLES WITH READ LOCK;
+mysql> SHOW MASTER STATUS;
+mysql> UNLOCK TABLES;
+
+-----------------------------------------------------------------------------------
+https://dev.mysql.com/doc/refman/5.7/en/replication-snapshot-method.html
+
+https://dev.mysql.com/doc/refman/5.7/en/mysqldump.html
+Creating a Data Snapshot Using mysqldump
+shell> mysqldump --all-databases --master-data > dbdump.db
+https://www.digitalocean.com/community/tutorials/how-to-import-and-export-databases-in-mysql-or-mariadb
+
+-----------------------------------------------------------------------------------
+
+https://dev.mysql.com/doc/refman/5.7/en/replication-setup-slaves.html
+Setting the Master Configuration on the Slave
+mysql> CHANGE MASTER TO
+    ->     MASTER_HOST='master_host_name',
+    ->     MASTER_USER='replication_user_name',
+    ->     MASTER_PASSWORD='replication_password',
+    ->     MASTER_LOG_FILE='recorded_log_file_name',
+    ->     MASTER_LOG_POS=recorded_log_position;
+	
+-----------------------------------------------------------------------------------
+mysql> SET GLOBAL SQL_SLAVE_SKIP_COUNTER = 1;
+mysql> STOP SLAVE;
+mysql> START SLAVE;
+
