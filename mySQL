@@ -54,16 +54,16 @@ To handle the process manually, you should be able to switch from a failed maste
 
 ----------------------------------------------------------------------
 
+https://www.rmurph.com/post/configuring-mysql-master-slave-replication-in-windows
+Configuring MySQL Master/Slave Replication in Windows
+
+https://www.opsdash.com/blog/mysql-replication-howto.html
+How to Setup MySQL 5.7 Replication with Monitoring on Ubuntu 16.04
+
 
 For a guide to setting up two or more servers for replication using binary log file positions, Section 16.1.2, “Setting Up Binary Log File Position Based Replication”, deals with the configuration of the servers and provides methods for copying data between the master and slaves.
-
 For a guide to setting up two or more servers for replication using GTID transactions, Section 16.1.3, “Replication with Global Transaction Identifiers”, deals with the configuration of the servers.
-
-
-
 https://dev.mysql.com/doc/refman/5.7/en/replication-howto-masterbaseconfig.html
-
-
 https://www.gigenet.com/blog/basic-mysql-replication-setup-using-binary-log-file-position/
 
 -----------------------------------------------------------------------------------
