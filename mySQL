@@ -1,6 +1,16 @@
 
 
 -----------------------------------------------------------------------------------
+mysql
+SHOW VARIABLES LIKE "%version%";
+
+https://www.liquidweb.com/kb/mysql-performance-identifying-long-queries/
+mysqladmin proc stat
+show processlist;
+
+https://www.liquidweb.com/kb/mysql-optimization-how-to-leverage-mysql-database-indexing/
+SHOW INDEX FROM tableName;
+
 
 
 -----------------------------------------------------------------------------------
