@@ -17,6 +17,8 @@ SHOW VARIABLES LIKE "%version%";
 
 https://www.liquidweb.com/kb/mysql-performance-identifying-long-queries/
 mysqladmin proc stat
+
+#If you just want to check if it is stalled you can query - and see what is being executed.
 show processlist;
 
 https://www.liquidweb.com/kb/mysql-optimization-how-to-leverage-mysql-database-indexing/
