@@ -11,6 +11,16 @@ SELECT physical_memory_in_use_kb/1024 FROM sys.dm_os_process_memory
 
 
 - -------------------------------------------------------------------------------------------------------
+https://www.sqlshack.com/dba-guide-sql-server-performance-troubleshooting-part-1-problems-performance-metrics/
+select * from sys.dm_os_performance_counters 
+where counter_name in ('Batch Requests/sec', 'SQL Compilations/sec' , 'SQL Re-Compilations/sec')    
+
+https://www.sqlshack.com/dba-guide-sql-server-performance-troubleshooting-part-2-monitoring-utilities/
+
+https://www.sqlshack.com/sql-server-alerts-troubleshooting-performance-issues-sql-server-alerting-basics/
+
+https://www.sqlshack.com/windows-performance-monitor-basics/
+https://www.sqlshack.com/sql-server-performance-tuning-using-windows-performance-monitor/
 
 - -------------------------------------------------------------------------------------------------------
 
