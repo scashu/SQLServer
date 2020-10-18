@@ -1,0 +1,5 @@
+EXECUTE msdb.dbo.rds_drop_database  N'DC_GIS'
+EXEC rdsadmin.dbo.rds_set_database_online N'DC_GIS'
+EXEC rdsadmin.dbo.rds_modify_db_name N'DC_GIS', N'TOBE_DROPPED_DC_GIS'
+
+
