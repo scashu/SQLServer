@@ -1,5 +1,29 @@
+------------------------------------------------------------------
+REPLICATION from SQL Server on-premise to RDS
+------------------------------------------------------------------
+https://aws.amazon.com/blogs/database/replicating-amazon-ec2-or-on-premises-sql-server-to-amazon-rds-for-sql-server/
+-- compare row count in source and destination
+SELECT 
+    OBJECT_NAME(st.object_id), 
+    Total_Rows = SUM(st.row_count)
+FROM sys.dm_db_partition_stats st
+INNER JOIN sys.objects AS o 
+    ON o.object_id = st.object_id
+WHERE (index_id < 2)
+    AND o.type = 'U'
+GROUP BY st.object_id;
+------------------------------------------------------------------
+------------------------------------------------------------------
+
+------------------------------------------------------------------
+------------------------------------------------------------------
 EXECUTE msdb.dbo.rds_drop_database  N'DC_GIS'
 EXEC rdsadmin.dbo.rds_set_database_online N'DC_GIS'
 EXEC rdsadmin.dbo.rds_modify_db_name N'DC_GIS', N'TOBE_DROPPED_DC_GIS'
 
 
+------------------------------------------------------------------
+------------------------------------------------------------------
+
+------------------------------------------------------------------
+------------------------------------------------------------------
